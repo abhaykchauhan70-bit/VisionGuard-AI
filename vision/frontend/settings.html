@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - VisionGuard AI</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+  <main class="main">
+    <div class="page-header">
+      <div><div class="page-title">Settings</div><div class="page-subtitle">Account details</div></div>
+    </div>
+    <div class="panel" style="max-width:480px;">
+      <div class="field"><label>Username</label><input id="s-username" disabled></div>
+      <div class="field"><label>Email</label><input id="s-email" disabled></div>
+      <div class="field"><label>Member since</label><input id="s-created" disabled></div>
+      <button class="btn btn-danger" id="logout-btn2">Log Out</button>
+    </div>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+  Auth.requireLogin();
+  renderSidebar("settings");
+  const user = Auth.getUser();
+  if (user) {
+    document.getElementById("s-username").value = user.username;
+    document.getElementById("s-email").value = user.email;
+    document.getElementById("s-created").value = new Date(user.created_at).toLocaleDateString();
+  }
+  document.getElementById("logout-btn2").addEventListener("click", () => Auth.logout());
+</script>
+</body>
+</html>

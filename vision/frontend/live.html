@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Camera - VisionGuard AI</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Live Camera</div>
+        <div class="page-subtitle">Browser-side preview. Server-side webcam processing runs via OpenCV (see README).</div>
+      </div>
+      <div>
+        <button class="btn btn-primary" id="start-btn"><span class="live-dot" style="display:none;" id="live-dot"></span>Start Camera</button>
+        <button class="btn btn-ghost" id="stop-btn" style="display:none;">Stop</button>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <h3 class="mb-16">Camera Feed</h3>
+        <video id="webcam-video" autoplay muted playsinline style="border-radius:12px;background:#000;width:100%;"></video>
+      </div>
+      <div class="panel">
+        <h3 class="mb-16">Live Stats</h3>
+        <div id="live-stats">
+          <div class="stat-label">FPS</div>
+          <div class="stat-value" id="live-fps" style="font-size:26px;">–</div>
+          <p class="text-muted" style="margin-top:16px;font-size:13px;">
+            Full server-side detection on this stream requires the
+            <code>POST /live/start</code> endpoint that streams frames to the
+            YOLO + CNN-LSTM pipeline over a WebSocket — implemented as a
+            follow-up phase once the core pipeline above is verified working.
+            This page currently shows a live local camera preview only.
+          </p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+  Auth.requireLogin();
+  renderSidebar("live");
+
+  let stream = null;
+  let fpsCounter = 0, lastTime = performance.now();
+
+  document.getElementById("start-btn").addEventListener("click", async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      document.getElementById("webcam-video").srcObject = stream;
+      document.getElementById("start-btn").style.display = "none";
+      document.getElementById("stop-btn").style.display = "inline-flex";
+      document.getElementById("live-dot").style.display = "inline-block";
+      requestAnimationFrame(countFrame);
+    } catch (e) {
+      alert("Camera access denied or unavailable: " + e.message);
+    }
+  });
+
+  document.getElementById("stop-btn").addEventListener("click", () => {
+    if (stream) stream.getTracks().forEach(t => t.stop());
+    document.getElementById("start-btn").style.display = "inline-flex";
+    document.getElementById("stop-btn").style.display = "none";
+    document.getElementById("live-dot").style.display = "none";
+    document.getElementById("live-fps").textContent = "–";
+  });
+
+  function countFrame() {
+    fpsCounter++;
+    const now = performance.now();
+    if (now - lastTime >= 1000) {
+      document.getElementById("live-fps").textContent = fpsCounter;
+      fpsCounter = 0;
+      lastTime = now;
+    }
+    if (stream) requestAnimationFrame(countFrame);
+  }
+</script>
+</body>
+</html>

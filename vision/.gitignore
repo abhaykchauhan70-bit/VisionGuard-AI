@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+*.pyc
+.env
+uploads/*
+!uploads/.gitkeep
+results/*
+!results/.gitkeep
+models/*.pt
+!models/.gitkeep
+ai/datasets/*
+!ai/datasets/.gitkeep
+.vscode/
+*.log

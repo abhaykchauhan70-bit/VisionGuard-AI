@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VisionGuard AI - Login</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="brand-mark" style="width:46px;height:46px;font-size:19px;">VG</div>
+        <div class="auth-title">VisionGuard AI</div>
+        <div class="auth-subtitle">Real-Time Video Intelligence Platform</div>
+      </div>
+
+      <div id="alert-box" class="alert"></div>
+
+      <form id="login-form">
+        <div class="field">
+          <label>Username</label>
+          <input type="text" id="username" required autocomplete="username">
+        </div>
+        <div class="field">
+          <label>Password</label>
+          <input type="password" id="password" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="login-btn">Sign In</button>
+      </form>
+
+      <div class="auth-switch">Don't have an account? <a href="register.html">Create one</a></div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const alertBox = document.getElementById("alert-box");
+      const btn = document.getElementById("login-btn");
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      btn.disabled = true; btn.textContent = "Signing in...";
+      try {
+        const form = new URLSearchParams();
+        form.append("username", username);
+        form.append("password", password);
+
+        const resp = await fetch(`${API_BASE}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: form,
+        });
+        if (!resp.ok) throw new Error("Incorrect username or password");
+        const data = await resp.json();
+        Auth.setToken(data.access_token);
+
+        const me = await apiFetch("/auth/me");
+        Auth.setUser(me);
+
+        window.location.href = "dashboard.html";
+      } catch (err) {
+        showAlert(alertBox, err.message);
+        btn.disabled = false; btn.textContent = "Sign In";
+      }
+    });
+  </script>
+</body>
+</html>

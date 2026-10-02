@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Analysis Result - VisionGuard AI</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title" id="video-title">Analysis Result</div>
+        <div class="page-subtitle" id="video-status-line">Loading…</div>
+      </div>
+      <button class="btn btn-ghost" onclick="location.reload()">↻ Refresh</button>
+    </div>
+
+    <div class="grid-2 mb-24">
+      <div class="panel">
+        <h3 class="mb-16">Original Video</h3>
+        <video id="original-video" controls></video>
+      </div>
+      <div class="panel">
+        <h3 class="mb-16">Processed Video (with detections)</h3>
+        <video id="processed-video" controls></video>
+        <div class="text-muted" id="processed-pending" style="font-size:13px;margin-top:10px;display:none;">
+          Still processing — check back shortly.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2 mb-24">
+      <div class="panel">
+        <h3 class="mb-16">Activity Prediction</h3>
+        <div id="prediction-box" class="text-muted">No prediction yet.</div>
+      </div>
+      <div class="panel">
+        <h3 class="mb-16">Detected Objects</h3>
+        <div id="objects-summary" class="text-muted">No objects detected yet.</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h3 class="mb-16">Detection Timeline</h3>
+      <table id="objects-table">
+        <thead><tr><th>Frame</th><th>Timestamp</th><th>Object</th><th>Confidence</th></tr></thead>
+        <tbody><tr><td colspan="4" class="text-muted">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/result.js"></script>
+<script>
+  Auth.requireLogin();
+  renderSidebar("history");
+  loadResult();
+</script>
+</body>
+</html>

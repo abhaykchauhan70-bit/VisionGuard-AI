@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Upload Video - VisionGuard AI</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Upload Video</div>
+        <div class="page-subtitle">MP4, AVI, or MOV — up to 200MB</div>
+      </div>
+    </div>
+
+    <div class="panel" style="max-width:640px;">
+      <div id="dropzone" class="dropzone">
+        <div class="dropzone-icon">⬆</div>
+        <div style="font-weight:600;margin-bottom:6px;">Drag & drop your video here</div>
+        <div class="text-muted" style="font-size:13px;">or click to browse files</div>
+        <input type="file" id="file-input" accept=".mp4,.avi,.mov" hidden>
+      </div>
+
+      <div id="file-info" style="display:none;margin-top:16px;">
+        <div class="flex-between">
+          <span id="file-name" style="font-size:13.5px;"></span>
+          <span id="file-size" class="text-muted" style="font-size:12.5px;"></span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+
+      <div id="alert-box" class="alert"></div>
+
+      <button class="btn btn-primary btn-block" id="upload-btn" style="margin-top:18px;" disabled>
+        Upload & Start Analysis
+      </button>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/upload.js"></script>
+<script>
+  Auth.requireLogin();
+  renderSidebar("upload");
+</script>
+</body>
+</html>

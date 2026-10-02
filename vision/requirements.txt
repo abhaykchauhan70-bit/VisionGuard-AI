@@ -1,0 +1,33 @@
+# --- Web framework ---
+fastapi
+uvicorn[standard]
+python-multipart
+
+# --- Database ---
+sqlalchemy
+pymysql
+cryptography
+
+# --- Auth ---
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt
+
+# --- Config ---
+python-dotenv
+pydantic[email]
+
+# --- Computer Vision / Deep Learning ---
+opencv-python
+numpy
+torch
+torchvision
+ultralytics
+
+# --- ML utilities / metrics ---
+scikit-learn
+matplotlib
+
+# --- Testing ---
+pytest
+httpx

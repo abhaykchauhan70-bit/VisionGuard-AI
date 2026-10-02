@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Model Performance - VisionGuard AI</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Model Performance</div>
+        <div class="page-subtitle">Real evaluation metrics from ai/training scripts — nothing here is fabricated</div>
+      </div>
+    </div>
+
+    <div class="panel mb-24">
+      <table id="metrics-table">
+        <thead><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>Trained</th></tr></thead>
+        <tbody><tr><td colspan="6" class="text-muted">Loading…</td></tr></tbody>
+      </table>
+    </div>
+
+    <div class="panel chart-panel">
+      <h3 class="mb-16">Accuracy Comparison</h3>
+      <canvas id="metricsChart"></canvas>
+    </div>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script src="js/sidebar.js"></script>
+<script>
+  Auth.requireLogin();
+  renderSidebar("performance");
+  Chart.defaults.color = "#8b98ab";
+
+  async function loadMetrics() {
+    const tbody = document.querySelector("#metrics-table tbody");
+    try {
+      const metrics = await apiFetch("/dashboard/models/metrics");
+      if (!metrics.length) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><div class="icon">◇</div>
+          No models evaluated yet. Run a training script (e.g. <code>python -m ai.training.train_hybrid</code>)
+          — it logs real metrics here after evaluation.</div></td></tr>`;
+        return;
+      }
+      tbody.innerHTML = metrics.map(m => `
+        <tr>
+          <td>${m.model_name}</td>
+          <td>${(m.accuracy*100).toFixed(1)}%</td>
+          <td>${(m.precision*100).toFixed(1)}%</td>
+          <td>${(m.recall*100).toFixed(1)}%</td>
+          <td>${(m.f1_score*100).toFixed(1)}%</td>
+          <td class="text-muted">${new Date(m.trained_at).toLocaleDateString()}</td>
+        </tr>`).join("");
+
+      new Chart(document.getElementById("metricsChart"), {
+        type: "bar",
+        data: {
+          labels: metrics.map(m => m.model_name),
+          datasets: [{ label: "Accuracy", data: metrics.map(m => m.accuracy),
+            backgroundColor: "#38bdf8", borderRadius: 6 }],
+        },
+        options: { scales: { y: { min: 0, max: 1, grid: { color: "rgba(255,255,255,0.05)" } },
+          x: { grid: { display: false } } }, plugins: { legend: { display: false } } },
+      });
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="6" class="text-muted">Failed to load metrics.</td></tr>`;
+    }
+  }
+  loadMetrics();
+</script>
+</body>
+</html>

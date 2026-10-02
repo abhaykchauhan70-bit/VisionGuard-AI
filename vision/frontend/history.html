@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>History - VisionGuard AI</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Analysis History</div>
+        <div class="page-subtitle">All videos you've uploaded and analyzed</div>
+      </div>
+      <input type="text" id="search-input" placeholder="Search by filename…"
+        style="padding:10px 14px;border-radius:8px;border:1px solid var(--panel-border);background:var(--bg-elevated);color:var(--text-primary);width:240px;">
+    </div>
+
+    <div class="panel">
+      <table id="history-table">
+        <thead><tr><th>File</th><th>Status</th><th>Duration</th><th>Uploaded</th><th></th></tr></thead>
+        <tbody><tr><td colspan="5" class="text-muted">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+<script src="js/app.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/history.js"></script>
+<script>
+  Auth.requireLogin();
+  renderSidebar("history");
+  loadHistory();
+</script>
+</body>
+</html>

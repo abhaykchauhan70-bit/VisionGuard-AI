@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard - VisionGuard AI</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <nav class="sidebar" id="sidebar-mount"></nav>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Overview</div>
+        <div class="page-subtitle">Real-time snapshot of your video intelligence activity</div>
+      </div>
+      <a href="upload.html" class="btn btn-primary">＋ Analyze New Video</a>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card" style="--stat-color:#38bdf8;">
+        <div class="stat-label">Total Videos</div>
+        <div class="stat-value" id="stat-videos">–</div>
+      </div>
+      <div class="stat-card" style="--stat-color:#a78bfa;">
+        <div class="stat-label">Total Predictions</div>
+        <div class="stat-value" id="stat-predictions">–</div>
+      </div>
+      <div class="stat-card" style="--stat-color:#fbbf24;">
+        <div class="stat-label">Detected Events</div>
+        <div class="stat-value" id="stat-events">–</div>
+      </div>
+      <div class="stat-card" style="--stat-color:#34d399;">
+        <div class="stat-label">Avg. Confidence</div>
+        <div class="stat-value" id="stat-confidence">–</div>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="panel chart-panel">
+        <h3>Activity Distribution</h3>
+        <canvas id="activityChart"></canvas>
+      </div>
+      <div class="panel chart-panel">
+        <h3>Prediction Confidence</h3>
+        <canvas id="confidenceChart"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="flex-between mb-16">
+        <h3>Recent Videos</h3>
+        <a href="history.html" class="text-muted" style="font-size:13px;">View all →</a>
+      </div>
+      <table id="recent-table">
+        <thead><tr><th>File</th><th>Status</th><th>Uploaded</th><th></th></tr></thead>
+        <tbody><tr><td colspan="4" class="text-muted">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script src="js/sidebar.js"></script>
+<script src="js/dashboard.js"></script>
+<script>
+  Auth.requireLogin();
+  renderSidebar("dashboard");
+  loadDashboard();
+</script>
+</body>
+</html>
